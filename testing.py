@@ -13,8 +13,7 @@ from delete import delete_dir
 from pdfminer.high_level import extract_text
 from ftplib import FTP
 
-
-path_of_folders = r"C:\Users\USER\Desktop\pdfss\18012021\2021\1\18"
+path_of_folders = r"C:\Users\USER\Desktop\pdfss\09012021\2021\1\9"
             
 #Current working directory
 root = os.getcwd()
@@ -111,7 +110,6 @@ Final_eligiblity_conditions = pd.DataFrame(list(zip(eligiblity_conditions,tender
 
 Final_eligiblity_conditions.drop(Final_eligiblity_conditions[Final_eligiblity_conditions['eligiblity_conditions']=='Series([], )'].index,inplace = True)
 
-
 def write_file():
 
     for i in Final_eligiblity_conditions.index:
@@ -127,14 +125,17 @@ def write_file():
         eligiblity_conditions=eligiblity_conditions.rstrip()
         
         name = r'C:\Users\USER\Desktop\text_datas\{}.txt'.format(tender_id)
-        
-        with open(name, "a") as text_file:
-            
-            text_file.write(str(eligiblity_conditions))
+
+        try:
+            with open(name, "a") as text_file:
+
+                    
+                text_file.write(str(eligiblity_conditions))
+        except Exception:
+            print('error in text')
 
 
 def send_file():
-
     #To send the file to FTP server
     ftp_send = FTP('216.10.240.149')
 
@@ -150,7 +151,11 @@ def send_file():
         serverdirectorypath='/ec/'
 
         ftp_send.cwd(serverdirectorypath)
-            
+           
         ftp_send.storbinary('STOR ' + name, open(full_fname, 'rb'))
             
         print(full_fname)
+
+write_file()
+
+send_file()
