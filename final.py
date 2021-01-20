@@ -29,7 +29,8 @@ def eligiblity_conditions():
     month = date.month
 
     #Folder path 2020
-    path_of_folders = r'C:\Users\USER\Desktop\pdfss\19012021\{0}\{1}\{2}'.format(year, month,day)
+    #path_of_folders = r'C:\Users\USER\Desktop\pdfss\19012021\{0}\{1}\{2}'.format(year, month,day)
+    path_of_folders = r'C:\Users\USER\Desktop\pdfss\20012021\2021\1\20'
 
     eligiblity_conditions = []
 
@@ -61,7 +62,8 @@ def eligiblity_conditions():
                 path = os.path.join(dir,filename)
                                 
                 if filename.endswith('.pdf'):
-                                
+
+                    #11111111111111111111111111           
                     try:
                                 
                         #To get document required from seller in GEM documents
@@ -73,6 +75,8 @@ def eligiblity_conditions():
                         document = page1[page1[0].str.contains('Document required from seller')]
                                 
                         result = document.iloc[0,1]
+
+                        result = "Document required from seller :   \n"+ str(result)
                                 
                         eligiblity_conditions.append(result)
                                 
@@ -81,42 +85,81 @@ def eligiblity_conditions():
                     except Exception as e:
                                 
                         print(e)
-                            
+
+                    #For GEM tenders
+                    text = extract_text(filename)
+
+                    #2222222222222222222222222222222222222222     
                     try:
-                                
-                        #For GEM tenders
-                        text = extract_text(filename)
-                                
+
+                        word = '---Thank You---'
+
                         #Getting the terms and conditions For Gem tenders
-                        texts = text.split('Special terms and conditions')
-                                
-                        result = texts[1]
-                                
-                        eligiblity_conditions.append(result)
-                                
-                        tender_id_eligiblity.append(tender_id)
+                        if text.split('Special terms and conditions'):
+
+                            result = text.split('Special terms and conditions')[1]
+
+                            if word in result:
+
+                                result = result.split('---Thank You---')[0]
+
+                                result = '\n   Special terms and conditions :   \n'+ str(result)
+                                        
+                                eligiblity_conditions.append(result)
+                                        
+                                tender_id_eligiblity.append(tender_id)
                                 
                     except Exception as e:
                                 
                         print(e)
-                                
+
+                    #333333333333333333333333333333333333
                     try:
+                        word = '---Thank You---'
+       
+                        #Getting the terms and conditions For Gem tenders
+                        if text.split('Bid Specific Additional Terms and Conditions'):
+
+                            result = text.split('Bid Specific Additional Terms and Conditions')[1]
+
+                            if word in result:
+
+                                result = result.split('---Thank You---')[0]
+
+                                result = '\n Bid Specific Additional Terms and Conditions : \n'+ str(result)
+                                        
+                                eligiblity_conditions.append(result)
+                                        
+                                tender_id_eligiblity.append(tender_id)
                                 
+                    except Exception as e:
+                                
+                        print(e)
+
+                    #444444444444444444444444444444444444444444         
+                    try:
+                          
                         #For IRPS Tenders       
                         texts = text.split('4. ELIGIBILITY CONDITIONS')
                                 
                         content = texts[1].split('5. COMPLIANCE')
-                                
-                        result = content[0].split('Defination  of  Similar  Work')
-                                
-                        result = result[1].split('.')[0]
-                                
-                        eligiblity_conditions.append(result)
 
-                        tender_id_eligiblity.append(tender_id)
+                        if content[0].split('Defination  of  Similar  Work'):
+
+                            result = content[0].split('Defination  of  Similar  Work')
+                                                    
+                            result = result[1].split('.')[0]
+                                
+                            print(result)
+
+                            result = '\n Defination  of  Similar  Work \n'+str(result)
+                                    
+                            eligiblity_conditions.append(result)
+
+                            tender_id_eligiblity.append(tender_id)
                                 
                     except Exception as e:
-                                
+
                         print("not done")
                             
         delete_dir()
@@ -182,53 +225,53 @@ def send_file():
 
 if __name__ == '__main__':
 
-    #Final_eligiblity_conditions = eligiblity_conditions()
+    Final_eligiblity_conditions = eligiblity_conditions()
 
-    #write_file()
+    write_file()
 
     #send_file()
 
     #To delete ZIP files and extracted folders
 
-    date = datetime.now()
+    # date = datetime.now()
 
-    today = date.strftime('%d%m%Y')
+    # today = date.strftime('%d%m%Y')
 
-    day = date.day
+    # day = date.day
 
-    year = date.year
+    # year = date.year
 
-    month = date.month
+    # month = date.month
 
-    #directory_zip = r'C:\Users\USER\Desktop\pdfss\19012021\{0}\{1}\{2}'.format(year, month,day)
+    # #directory_zip = r'C:\Users\USER\Desktop\pdfss\19012021\{0}\{1}\{2}'.format(year, month,day)
 
-    directory_zip =  r'C:\Users\USER\Desktop\pdfss\19012021'
-    
-    try:
-        shutil.rmtree(directory_zip)
+    # directory_zip =  r'C:\Users\USER\Desktop\pdfss\10012021'
 
-    except Exception as e:
+    # try:
+    #     shutil.rmtree(directory_zip)
 
-        print('Already deleted',e)
+    # except Exception as e:
 
-    #To delete text files after sending to FTP server
-    try:
+    #     print('Already deleted',e)
 
-        directory = r"C:\Users\USER\Desktop\text_datas"
+    # #To delete text files after sending to FTP server
+    # try:
 
-        files_in_directory = os.listdir(directory)
+    #     directory = r"C:\Users\USER\Desktop\text_datas"
 
-        filtered_files = [file for file in files_in_directory if file.endswith(".txt")]
+    #     files_in_directory = os.listdir(directory)
 
-        for file in filtered_files:
+    #     filtered_files = [file for file in files_in_directory if file.endswith(".txt")]
 
-            path_to_file = os.path.join(directory, file)
+    #     for file in filtered_files:
 
-            os.remove(path_to_file)
+    #         path_to_file = os.path.join(directory, file)
 
-    except Exception as e:
+    #         os.remove(path_to_file)
 
-        print(e)
+    # except Exception as e:
+
+    #     print(e)
 
 
 
